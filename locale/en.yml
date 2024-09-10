@@ -1,0 +1,31 @@
+pixiake-aichat:
+  # For more details on the format
+  # Checkout https://docs.flarum.org/extend/i18n/#appendix-a-standard-key-format
+  admin:
+    settings:
+      url_for_flarum_label: URL for Flarum
+      url_for_flarum_help: Enter the URL of the Flarum forum.
+      api_key_for_flarum_label: API Key for Flarum
+      api_key_for_flarum_help: Set the API key from Flarum.
+      async_server_url_label: Async Server URL
+      async_server_url_help: Enter the URL of the Ai platform server.
+      apiserver_url_for_chatbot_label: Api Server URL for Chatbot
+      apiserver_url_for_chatbot_help: Enter the URL of the chatbot platform.
+      api_key_for_chatbot_label: API Key for Chatbot
+      api_key_for_chatbot_help: Get the API key from chatbot platform.
+      model_label: Model
+      model_help: "Learn more about <a>models</a> (default: <code>text-davinci-003</code>)."
+      max_tokens_label: Max Tokens
+      max_tokens_help: <a>What are tokens and how to count them?</a>
+      user_for_answer_label: User For Answer
+      user_for_answer_help: Enter the user id that will be used to generate the answer. Default is who started the discussion.
+      user_for_chatbot_label: User For Chatbot
+      user_for_chatbot_help: Enter the user that will be used to request the answer from chat server.
+      enable_on_discussion_started_label: Enable on discussion started
+      enable_on_discussion_started_help: The discussion will receive an answer based on content of first post when the discussion is started.
+      enabled_tags_label: Enabled Tags
+      enabled_tags_help: Select which tags will be used to generate the answer.
+
+    permissions:
+      use_ai_chat_assistant_label: Use Ai Chat Assistant
+  forum:
