@@ -13,7 +13,6 @@ namespace Pixiake\AiChat;
 
 use Pixiake\AiChat\Listener\AiChatForPost;
 use Pixiake\AiChat\Listener\AiChatForTag;
-use Flarum\Tags\Event\DiscussionWasTagged;
 use Flarum\Post\Event\Posted;
 use Flarum\Extend;
 
@@ -28,6 +27,5 @@ return [
     new Extend\Locales(__DIR__.'/locale'),
 
     (new Extend\Event())
-        ->listen(DiscussionWasTagged::class, AiChatForTag::class)
         ->listen(Posted::class, AiChatForPost::class),
 ];

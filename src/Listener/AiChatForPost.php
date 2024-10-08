@@ -38,7 +38,6 @@ class AiChatForPost
 
         $is_mention = false;
 
-        $this->logger->info('content: ' . $content);
         if ((preg_match_all('/#(\d+)/', $content, $matches))) {
             $userIds = $matches[1];
             foreach ($userIds as $userId) {
@@ -49,18 +48,19 @@ class AiChatForPost
             }
         }
 
+        if ($is_mention == false) {
+            return;
+        }
+
+        $discussion = $event -> post -> discussion;
         // Check if the tag is enabled on discussion
         $enabledTagIds = $this->settings->get('pixiake-aichat.enabled-tags', '[]');
 
-        $discussion = $event-> post ->discussion;
-
-        if ($is_mention == false) {
-            if ($enabledTagIds = json_decode($enabledTagIds, true)) {
-
-                $tagIds = Arr::pluck($discussion->tags, 'id');
-
-                if (! array_intersect($enabledTagIds, $tagIds)) {
-                    return;
+        if ($enabledTagIds = json_decode($enabledTagIds, true)) {
+            $tagIds = Arr::pluck($discussion->tags, 'id');
+            foreach ($enabledTagIds as $enabledTagId) {
+                if ( !$discussion->tags || ! in_array($enabledTagId, $tagIds)) {
+                    $discussion -> tags() -> attach($enabledTagId);
                 }
             }
         }
@@ -98,34 +98,23 @@ class AiChatForPost
             $conversation_id = $discussionChatIdRecord -> chat_id;
         }
 
-
-        $questions = [];
+        $questions[] = [
+            'content' => $title,
+            'role' => 'user'
+        ];
 
         if ( $actorId != $userId_for_answer ) {
-            if ($is_mention == false) {
-                foreach ($posts as $post) {
-                    $role = $post->user_id == $userId_for_answer ? 'assistant' : 'user';
-
-                    $content = "";
-                    if (is_string($post -> content)) {
-                        $content = $post->content;
-                    } else {
-                        continue;
-                    }
-
-                    if ( $post->postNumber == 0 ) {
-                        $content = $title . "\n" . $post -> content;
-                    }
-
-                    $questions[] = [
-                        'content' => $content,
-                        'role' => $role
-                    ];
+            foreach ($posts as $post) {
+                $role = $post->user_id == $userId_for_answer ? 'assistant' : 'user';
+                $content = "";
+                if (is_string($post -> content)) {
+                    $content = $post->content;
+                } else {
+                    continue;
                 }
-            } else {
                 $questions[] = [
                     'content' => $content,
-                    'role' => 'user'
+                    'role' => $role
                 ];
             }
         } else {
@@ -137,10 +126,10 @@ class AiChatForPost
            $prefix = $conversation['content'] . "\n\n";
         }
 
-        if (count($posts) > 15) {
+        if (count($posts) > 20) {
            return;
         } else {
-            $this -> client -> completion($questions, $conversation_id, $discussionId, $prefix);
+           $this -> client -> completion($questions, $conversation_id, $discussionId, $prefix);
         }
     }
 }
