@@ -38,7 +38,6 @@ class AiChatForPost
 
         $is_mention = false;
 
-        $this->logger->info('content: ' . $content);
         if ((preg_match_all('/#(\d+)/', $content, $matches))) {
             $userIds = $matches[1];
             foreach ($userIds as $userId) {
