@@ -23,9 +23,21 @@ pixiake-aichat:
       user_for_chatbot_help: Enter the user that will be used to request the answer from chat server.
       enable_on_discussion_started_label: Enable on discussion started
       enable_on_discussion_started_help: The discussion will receive an answer based on content of first post when the discussion is started.
+      knowledge_base_label: Knowledge Base
+      knowledge_base_help: Select the knowledge base that will be used to self learning.
       enabled_tags_label: Enabled Tags
       enabled_tags_help: Select which tags will be used to generate the answer.
-
+      need_to_learn_tags_label: Need to Learn Tags
+      need_to_learn_tags_help: Select which tags will be used to mark disscussion to need to learn.
+      already_learned_tags_label: Already Learned Tags
+      already_learned_tags_help: Select which tags will be used to mark disscussion to already learned.
     permissions:
+      mark_answer_label: Mark Answer
       use_ai_chat_assistant_label: Use Ai Chat Assistant
   forum:
+    mark_correct: Mark Correct
+    unmark_correct: Unmark Correct
+    mark_wrong: Mark Wrong
+    unmark_wrong: Unmark Wrong
+    correct_answer: Correct Answer
+    wrong_answer: Wrong Answer

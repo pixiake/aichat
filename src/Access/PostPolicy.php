@@ -2,13 +2,13 @@
 
 namespace Pixiake\AiChat\Access;
 
-use Flarum\Discussion\Discussion;
 use Flarum\User\Access\AbstractPolicy;
+use Flarum\Post\Post;
 use Flarum\User\User;
 
-class DiscussionPolicy extends AbstractPolicy
+class PostPolicy extends AbstractPolicy
 {
-    public function canMarkAnswer(User $actor, Discussion $discussion)
+    public function canMarkAnswer(User $actor, Post $post)
     {
         // 管理员始终可以标记
         if ($actor->isAdmin()) {
@@ -16,7 +16,7 @@ class DiscussionPolicy extends AbstractPolicy
         }
 
         // 讨论作者可以标记
-        if ($actor->id === $discussion->user_id) {
+        if ($actor->id === $post -> discussion -> user_id) {
             return true;
         }
 

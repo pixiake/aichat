@@ -71,14 +71,36 @@ export default class AiChatSettings extends ExtensionPage {
               help: app.translator.trans('pixiake-aichat.admin.settings.enable_on_discussion_started_help'),
             })}
             {this.buildSettingComponent({
+              setting: 'pixiake-aichat.knowledge_base',
+              type: 'text',
+              label: app.translator.trans('pixiake-aichat.admin.settings.knowledge_base_label'),
+              help: app.translator.trans('pixiake-aichat.admin.settings.knowledge_base_help'),
+            })}
+            {this.buildSettingComponent({
               type: 'flarum-tags.select-tags',
-              setting: 'pixiake-aichat.enabled-tags',
-              label: app.translator.trans('pixiake-aichat.admin.settings.enabled_tags_label'),
-              help: app.translator.trans('pixiake-aichat.admin.settings.enabled_tags_help'),
+              setting: 'pixiake-aichat.need-to-learn-tags',
+              label: app.translator.trans('pixiake-aichat.admin.settings.need_to_learn_tags_label'),
+              help: app.translator.trans('pixiake-aichat.admin.settings.need_to_learn_tags_help'),
               options: {
                 requireParentTag: false,
                 limits: {
                   max: {
+                    primary: 1,
+                    secondary: 0,
+                  },
+                },
+              },
+            })}
+            {this.buildSettingComponent({
+              type: 'flarum-tags.select-tags',
+              setting: 'pixiake-aichat.already-learned-tags',
+              label: app.translator.trans('pixiake-aichat.admin.settings.already_learned_tags_label'),
+              help: app.translator.trans('pixiake-aichat.admin.settings.already_learned_tags_help'),
+              options: {
+                requireParentTag: false,
+                limits: {
+                  max: {
+                    primary: 1,
                     secondary: 0,
                   },
                 },

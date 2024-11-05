@@ -5,9 +5,9 @@ namespace Pixiake\AiChat\Listener;
 use Pixiake\AiChat\Models\DiscussionChatId;
 use Pixiake\AiChat\AiChatClient;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\User\UserRepository;
+use Flarum\User\User;
+use Flarum\Post\Post;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Arr;
 use Psr\Log\LoggerInterface;
 
 
@@ -32,7 +32,7 @@ class AiChatForPost
             return;
         }
 
-        // Check if the user for answer is @mention
+        // Check if the user for answer is @mention  @username #userid
         $content = $event -> post -> content;
         $userId_for_answer = $this->settings->get('pixiake-aichat.user_for_answer');
 
@@ -48,22 +48,48 @@ class AiChatForPost
             }
         }
 
-        if ($is_mention == false) {
+
+        if (!$is_mention) {
+            // 先获取目标用户信息
+            $target_user = User::find($userId_for_answer);
+            if (!$target_user) {
+                return;
+            }
+
+            $target_mention = '@' . $target_user->display_name . ' '; // 加空格确保完整匹配
+            if ( strpos($content . ' ', $target_mention) !== false ) {
+                $is_mention = true;
+            }
+        }
+
+
+        if (!$is_mention && preg_match_all('/@"[^"]+?"#p(\d+)/', $content, $matches)) {
+            foreach ($matches[1] as $postId) {
+                $post = Post::find($postId);
+                if ($post && $post->user_id == $userId_for_answer) {
+                    $is_mention = true;
+                    break;
+                }
+            }
+        }
+
+
+        if (!$is_mention) {
             return;
         }
 
         $discussion = $event -> post -> discussion;
         // Check if the tag is enabled on discussion
-        $enabledTagIds = $this->settings->get('pixiake-aichat.enabled-tags', '[]');
+        // $enabledTagIds = $this->settings->get('pixiake-aichat.enabled-tags', '[]');
 
-        if ($enabledTagIds = json_decode($enabledTagIds, true)) {
-            $tagIds = Arr::pluck($discussion->tags, 'id');
-            foreach ($enabledTagIds as $enabledTagId) {
-                if ( !$discussion->tags || ! in_array($enabledTagId, $tagIds)) {
-                    $discussion -> tags() -> attach($enabledTagId);
-                }
-            }
-        }
+        // if ($enabledTagIds = json_decode($enabledTagIds, true)) {
+        //     $tagIds = Arr::pluck($discussion->tags, 'id');
+        //     foreach ($enabledTagIds as $enabledTagId) {
+        //         if ( !$discussion->tags || ! in_array($enabledTagId, $tagIds)) {
+        //             $discussion -> tags() -> attach($enabledTagId);
+        //         }
+        //     }
+        // }
 
         // Chek if the userId for post is the userId for answer
         $actorId = $event -> post -> user_id;
@@ -107,7 +133,7 @@ class AiChatForPost
             foreach ($posts as $post) {
                 $role = $post->user_id == $userId_for_answer ? 'assistant' : 'user';
                 $content = "";
-                if (is_string($post -> content)) {
+                if (is_string($post -> content) && ! $post -> is_marked_wrong) {
                     $content = $post->content;
                 } else {
                     continue;

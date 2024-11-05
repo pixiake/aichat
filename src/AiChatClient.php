@@ -56,8 +56,9 @@ class AiChatClient
 
             return null;
         }
+        
 
-        if ($result['retcode'] !== 0) {
+        if ($result['code'] !== 0) {
             $this -> logger -> error('Failed to start new conversation: ' . $result['retcode'] . '' . $result['retmsg'] . '' . $response->getBody()->getContents());
             return null;
         }
@@ -91,6 +92,29 @@ class AiChatClient
             $result = json_decode($response->getBody()->getContents(), true);
 
             $this->logger->info('Completion result: ' . (string)$response->getBody());
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
+
+    public function self_learning(string $discussionId, string $content, string $action)
+    {
+        try {
+
+            $response = $this->async_client->post('self-learning', [
+                'json' => [
+                    'action' => $action,
+                    'knowledge_id' => $this->settings->get('pixiake-aichat.knowledge_base'),
+                    'url_for_chatbot' => $this->settings->get('pixiake-aichat.apiserver_url_for_chatbot'),
+                    'api_key_for_chatbot' => $this->settings->get('pixiake-aichat.api_key_for_chatbot'),
+                    "discussion_id" => $discussionId,
+                    "content" => $content,
+                ],
+            ]);
+
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            $this->logger->info('self learning result: ' . (string)$response->getBody());
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());
         }

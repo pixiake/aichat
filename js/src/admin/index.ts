@@ -7,12 +7,11 @@ app.initializers.add('pixiake/aichat', () => {
     .for('pixiake-aichat')
     .registerPermission(
       {
-        label: app.translator.trans('pixiake-aichat.admin.permissions.use_ai_chat_assistant_label'),
-        icon: 'fas fa-comment',
-        permission: 'discussion.useAiChatAssistant',
-        allowGuest: true,
-      },
-      'start'
+         icon: 'fas fa-times',
+         label: app.translator.trans('pixiake-aichat.admin.permissions.mark_answer_label'),
+         permission: 'discussion.markAnswer'
+      }, 
+    'moderate'
     )
     .registerPage(AiChatSettings);
 });

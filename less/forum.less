@@ -1,0 +1,64 @@
+.AnswerMark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  
+  &.correct {
+    background-color: #f0fff0;
+    
+    i {
+      color: #4caf50;
+    }
+    
+    span {
+      color: #2e7d32;
+    }
+  }
+  
+  &.wrong {
+    background-color: #fff2f2;
+    
+    i {
+      color: #ff4444;
+    }
+    
+    span {
+      color: #d32f2f;
+    }
+  }
+  
+  i {
+    font-size: 16px;
+  }
+  
+  span {
+    font-size: 12px;
+  }
+}
+
+.Post {
+  position: relative;
+}
+
+.Button--link {
+  &.marked-correct {
+    color: #4caf50;
+    
+    &:hover {
+      background-color: #f0fff0;
+    }
+  }
+  
+  &.marked-wrong {
+    color: #ff4444;
+    
+    &:hover {
+      background-color: #fff2f2;
+    }
+  }
+}

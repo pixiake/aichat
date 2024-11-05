@@ -1,0 +1,44 @@
+pixiake-aichat:
+  # For more details on the format
+  # Checkout https://docs.flarum.org/extend/i18n/#appendix-a-standard-key-format
+  admin:
+    settings:
+      url_for_flarum_label: Flarum 网址
+      url_for_flarum_help: 输入 Flarum 论坛的网址。
+      api_key_for_flarum_label: Flarum API 密钥
+      api_key_for_flarum_help:  设置 Flarum 的 API 密钥。
+      async_server_url_label: 异步服务器 URL
+      async_server_url_help: 输入 AI 平台服务器的 URL。
+      apiserver_url_for_chatbot_label: 聊天机器人的 API 服务器 URL
+      apiserver_url_for_chatbot_help: 输入聊天机器人平台的 URL。
+      api_key_for_chatbot_label:  聊天机器人的 API 密钥
+      api_key_for_chatbot_help: 从聊天机器人平台获取 API 密钥。
+      model_label: 模型
+      model_help: "了解更多关于 <a>模型</a>（默认：<code>text-davinci-003</code>）。"
+      max_tokens_label: 最大令牌
+      max_tokens_help: <a>令牌是什么以及如何计数？</a>
+      user_for_answer_label: 用于回答的用户
+      user_for_answer_help: 输入将用于生成答案的用户 ID。默认是开始讨论的人。
+      user_for_chatbot_label: 用于聊天机器人的用户
+      user_for_chatbot_help:  输入将用于从聊天服务器请求答案的用户。
+      enable_on_discussion_started_label: 在讨论开始时启用
+      enable_on_discussion_started_help: 当讨论开始时，讨论将根据第一篇帖子的内容接收答案。
+      knowledge_base_label: 知识库
+      knowledge_base_help: 选择将用于自学的知识库。
+      enabled_tags_label: 启用的标签
+      enabled_tags_help: 选择用于生成答案的标签。
+      need_to_learn_tags_label: 需要学习的标签
+      need_to_learn_tags_help: 选择用于标记讨论需要学习的标签。
+      already_learned_tags_label: 已经学习的标签
+      already_learned_tags_help: 选择用于标记讨论已经学习的标签。
+
+    permissions:
+      mark_answer_label: 标记答案
+      use_ai_chat_assistant_label: 使用 AI 聊天助手
+  forum:
+    mark_correct: 标记正确
+    unmark_correct: 取消正确
+    mark_wrong: 标记错误
+    unmark_wrong: 取消错误
+    correct_answer: 正确答案
+    wrong_answer: 错误答案
