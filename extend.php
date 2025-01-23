@@ -12,9 +12,12 @@
 namespace Pixiake\AiChat;
 
 use Pixiake\AiChat\Listener\AiChatForPost;
-use Flarum\Post\Event\Posted;
+use Pixiake\AiChat\Listener\AiChatForDiscussion;
+use Pixiake\AiChat\Listener\AiChatForTag;
+use Flarum\Post\Event\Saving;
 use Flarum\Extend;
-use Flarum\Discussion\Discussion;
+use Flarum\Discussion\Event\Started;
+use Flarum\Tags\Event\DiscussionWasTagged;
 use Pixiake\AiChat\Api\Controller\MarkDiscussionController;
 use Pixiake\AiChat\Api\Controller\MarkPostController;
 use Pixiake\AiChat\Access\DiscussionPolicy;
@@ -22,6 +25,7 @@ use Pixiake\AiChat\Access\PostPolicy;
 use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Post\Post;
+
 
 return [
     (new Extend\Frontend('forum'))
@@ -52,6 +56,7 @@ return [
 
     (new Extend\Settings())
         ->serializeToForum('botUserId', 'pixiake-aichat.user_for_answer')
+        ->serializeToForum('needHelpTags', 'pixiake-aichat.need-help-tags')
         ->serializeToForum('needLearnTags', 'pixiake-aichat.need-to-learn-tags')
         ->serializeToForum('learnedTags', 'pixiake-aichat.already-learned-tags'),
 
@@ -73,11 +78,15 @@ return [
             if (isset($attributes['learnedTags'])) {
                 $attributes['learnedTags'] = json_decode($attributes['learnedTags']) ?: [];
             }
-            
+            if (isset($attributes['needHelpTags'])) {
+                $attributes['needHelpTags'] = json_decode($attributes['needHelpTags']) ?: [];
+            }
             return $attributes;
         }),
 
 
     (new Extend\Event())
-        ->listen(Posted::class, AiChatForPost::class),
+        ->listen(Started::class, AiChatForDiscussion::class)
+        ->listen(DiscussionWasTagged::class, AiChatForTag::class),
+        // ->listen(Saving::class, AiChatForPost::class),
 ];

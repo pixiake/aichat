@@ -2,7 +2,7 @@ import app from 'flarum/admin/app';
 import AiChatSettings from "./components/AiChatSettings";
 
 app.initializers.add('pixiake/aichat', () => {
-  console.log('[pixiake/aichat] Hello, admin!');
+  // console.log('[pixiake/aichat] Hello, admin!');
   app.extensionData
     .for('pixiake-aichat')
     .registerPermission(

@@ -6,10 +6,6 @@ use Exception;
 use Flarum\Settings\SettingsRepositoryInterface;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Log\LoggerInterface;
-use GuzzleHttp\RequestOptions as HttpOptins;
-use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Middleware\DebugMiddleware;
-use GuzzleHttp\HandlerStack;
 
 class AiChatClient
 {
@@ -33,10 +29,17 @@ class AiChatClient
                'User-Agent' => 'FoxBot/1.0.0 (https://foxbot.ai)',
             ],
         ]);
-
-        $this -> async_client = new HttpClient([
-            'base_uri' => $this -> settings -> get('pixiake-aichat.async_server_url'),
+        $this -> webhook_client = new HttpClient([
+            'base_uri' => $this -> settings -> get('pixiake-aichat.we_webhook_url'),
             'headers' => [
+               'Content-Type' => 'application/json',
+               'User-Agent' => 'FoxBot/1.0.0 (https://foxbot.ai)',
+            ],
+        ]);
+        $this -> async_client = new HttpClient([
+            'base_uri' => $this -> settings -> get('pixiake-aichat.apiserver_url_for_chatbot'),
+            'headers' => [
+               'Authorization' => 'Bearer ' . $apiKey,
                'Accept' => '*/*',
                'User-Agent' => 'FoxBot/1.0.0 (https://foxbot.ai)',
             ],
@@ -69,23 +72,22 @@ class AiChatClient
         ];
     }
 
-    public function completion(array $messages, string $conversation_id, string $discussionId, string $prefix)
+    public function completion(array $messages, string $conversation_id, string $discussionId, string $prefix, string $action, string $help_request_tag, string $tech_share_tag)
     {
         try {
-
+            
             $response = $this->async_client->post('completion', [
                 'json' => [
+                    'action' => $action,
                     'prefix' => $prefix,
-                    'url_for_chatbot' => $this->settings->get('pixiake-aichat.apiserver_url_for_chatbot'),
-                    'api_key_for_chatbot' => $this->settings->get('pixiake-aichat.api_key_for_chatbot'),
-                    "url_for_flarum" => $this->settings->get('pixiake-aichat.url_for_flarum'),
-                    'api_key_for_flarum' => $this->settings->get('pixiake-aichat.api_key_for_flarum'),
                     "discussion_id" => $discussionId,
                     'req_for_aichat' => [
                         'conversation_id' => $conversation_id,
                         'messages' => $messages,
                         'stream' => false,
                     ],
+                    "tag_id_for_tech_share" => $tech_share_tag,
+                    "tag_id_for_question" => $help_request_tag,
                 ],
             ]);
 
@@ -97,7 +99,7 @@ class AiChatClient
         }
     }
 
-    public function self_learning(string $discussionId, string $content, string $action)
+    public function self_learning(string $discussionId, array $messages, string $action)
     {
         try {
 
@@ -105,10 +107,12 @@ class AiChatClient
                 'json' => [
                     'action' => $action,
                     'knowledge_id' => $this->settings->get('pixiake-aichat.knowledge_base'),
-                    'url_for_chatbot' => $this->settings->get('pixiake-aichat.apiserver_url_for_chatbot'),
-                    'api_key_for_chatbot' => $this->settings->get('pixiake-aichat.api_key_for_chatbot'),
                     "discussion_id" => $discussionId,
-                    "content" => $content,
+                    'req_for_aichat' => [
+                        'conversation_id' => "",
+                        'messages' => $messages,
+                        'stream' => false,
+                    ],
                 ],
             ]);
 
@@ -119,4 +123,18 @@ class AiChatClient
             $this->logger->error($e->getMessage());
         }
     }
+    
+    public function webhook(array $content)
+    {
+        try {
+            $response = $this -> webhook_client -> post('', [
+                'json' => $content,
+            ]);
+            $result = json_decode($response->getBody()->getContents(), true);
+            $this->logger->info('webhook result: ' . (string)$response->getBody());
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+    }
+    
 }

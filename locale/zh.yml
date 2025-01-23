@@ -5,8 +5,6 @@ pixiake-aichat:
     settings:
       url_for_flarum_label: Flarum 网址
       url_for_flarum_help: 输入 Flarum 论坛的网址。
-      api_key_for_flarum_label: Flarum API 密钥
-      api_key_for_flarum_help:  设置 Flarum 的 API 密钥。
       async_server_url_label: 异步服务器 URL
       async_server_url_help: 输入 AI 平台服务器的 URL。
       apiserver_url_for_chatbot_label: 聊天机器人的 API 服务器 URL
@@ -27,17 +25,25 @@ pixiake-aichat:
       knowledge_base_help: 选择将用于自学的知识库。
       enabled_tags_label: 启用的标签
       enabled_tags_help: 选择用于生成答案的标签。
+      help_request_tags_label: 求助标签
+      help_request_tags_help: 选择用于标记讨论求助的标签。
+      need_help_tags_label: 需要帮助的标签
+      need_help_tags_help: 选择用于标记讨论需要帮助的标签。
+      technical_share_tags_label: 技术分享标签
+      technical_share_tags_help: 选择用于标记讨论技术分享的标签。
       need_to_learn_tags_label: 需要学习的标签
       need_to_learn_tags_help: 选择用于标记讨论需要学习的标签。
       already_learned_tags_label: 已经学习的标签
       already_learned_tags_help: 选择用于标记讨论已经学习的标签。
-
+      we_webhook_url_label: 微信 Webhook URL
+      we_webhook_url_help:  输入微信 webhook URL。
     permissions:
       mark_answer_label: 标记答案
       use_ai_chat_assistant_label: 使用 AI 聊天助手
   forum:
-    mark_correct: 标记正确
-    unmark_correct: 取消正确
+    mark_need_help: 召唤大神
+    mark_correct: 认可我的回答
+    unmark_correct: 取消认可
     mark_wrong: 标记错误
     unmark_wrong: 取消错误
     correct_answer: 正确答案
